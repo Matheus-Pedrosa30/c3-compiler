@@ -35,12 +35,14 @@ export class ConstructProjectReader {
       normalizedProjectRoot,
       this.#objectTypesDirName,
     );
-    await assertReadableDirectory(objectTypesDir, "objectTypes directory");
+    const hasObjectTypesDir = await isReadableDirectory(objectTypesDir);
 
     const projectJsonFiles = await findConstructJsonFiles(normalizedProjectRoot);
     const sidOccurrences = await collectSidOccurrences(projectJsonFiles);
     const sidRegistry = SidRegistry.fromOccurrences(sidOccurrences);
-    const objectsByName = await readObjectCatalog(objectTypesDir);
+    const objectsByName = hasObjectTypesDir
+      ? await readObjectCatalog(objectTypesDir)
+      : new Map<string, ConstructObjectRef>();
 
     assertObjectSidsAreIndexed(objectsByName, sidRegistry.usedSids);
 
@@ -217,10 +219,19 @@ async function assertReadableDirectory(
     }
 
     const detail = error instanceof Error ? error.message : String(error);
-
     throw new ConstructProjectReaderError(
       `Cannot read ${label} at ${directory}: ${detail}`,
     );
+  }
+}
+
+async function isReadableDirectory(directory: string): Promise<boolean> {
+  try {
+    await access(directory, constants.R_OK);
+    const stats = await stat(directory);
+    return stats.isDirectory();
+  } catch {
+    return false;
   }
 }
 
