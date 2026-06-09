@@ -181,6 +181,33 @@ c3-compiler: syncing manifest: /home/matheusp/Projetos/construct3/project.c3proj
 c3-compiler: wrote /home/matheusp/Projetos/construct3/project.c3proj
 ```
 
+## Instalação e Configuração
+
+Siga os passos abaixo para clonar o repositório, instalar as dependências e preparar o ambiente de compilação:
+
+### 1. Clonar o Repositório
+
+Abra o seu terminal (ex: Kitty) e execute o comando abaixo para trazer o projeto para a sua máquina local:
+
+```bash
+git clone https://github.com/Matheus-Pedrosa30/c3-transpiler.git
+cd c3-transpiler
+```
+
+### 2. Instalar Dependências
+
+Instale os pacotes necessários gerenciados pelo npm. O compilador utiliza módulos nativos do Node.js, garantindo uma instalação leve e extremamente rápida:
+
+```bash
+npm install
+```
+
+### 3. Preparar o Projeto do Construct 3
+
+Para que o compilador funcione perfeitamente ("Estilo GCC"), o seu projeto do Construct 3 **DEVE** estar salvo no seu disco local utilizando a opção **"Save as folder" (Salvar como pasta)**.
+
+O compilador não opera diretamente sobre arquivos únicos comprimidos `.c3p`.
+
 ## Comandos De Desenvolvimento
 
 | Comando | Função |
