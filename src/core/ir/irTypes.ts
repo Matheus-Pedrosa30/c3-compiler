@@ -86,6 +86,7 @@ export interface ConditionNode extends BaseInvocationNode {
 
 export interface ActionNode extends BaseInvocationNode {
   readonly kind: "action";
+  readonly disabled?: boolean;
 }
 
 export interface InvocationTarget {

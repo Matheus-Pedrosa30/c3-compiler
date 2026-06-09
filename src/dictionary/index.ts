@@ -7,10 +7,12 @@ import {
   PlatformBehavior,
   platformBehaviorDefinition,
 } from "./behaviors/platform/index.js";
+import { PinBehavior } from "./behaviors/pin/index.js";
 import {
   KeyboardPlugin,
   keyboardPluginDefinition,
 } from "./plugins/keyboard/index.js";
+import { MousePlugin } from "./plugins/mouse/index.js";
 import { SystemPlugin, systemPluginDefinition } from "./plugins/system/index.js";
 import { SpriteObject, spriteObjectDefinition } from "./objects/spriteObject.js";
 import { object, use } from "./bindings/objectBinding.js";
@@ -18,6 +20,8 @@ import { object, use } from "./bindings/objectBinding.js";
 export {
   EightDirectionBehavior,
   KeyboardPlugin,
+  MousePlugin,
+  PinBehavior,
   PlatformBehavior,
   SpriteObject,
   SystemPlugin,

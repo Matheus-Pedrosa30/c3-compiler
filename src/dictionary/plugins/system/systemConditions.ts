@@ -13,6 +13,24 @@ export function otherwise(): ConditionDraft {
   };
 }
 
+export function everyTick(): ConditionDraft {
+  return {
+    kind: "condition",
+    dictionaryId: "System",
+    constructId: "every-tick",
+    params: [],
+  };
+}
+
+export function onStartOfLayout(): ConditionDraft {
+  return {
+    kind: "condition",
+    dictionaryId: "System",
+    constructId: "on-start-of-layout",
+    params: [],
+  };
+}
+
 export function compareTwoValues(
   firstValue: string,
   comparison: SystemComparison,

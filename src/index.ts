@@ -11,6 +11,8 @@ import { SidRegistry } from "./core/sid/sidRegistry.js";
 import {
   EightDirectionBehavior,
   KeyboardPlugin,
+  MousePlugin,
+  PinBehavior,
   PlatformBehavior,
   SpriteObject,
   SystemPlugin,
@@ -88,6 +90,8 @@ function createDslGlobals(): Record<string, unknown> {
     use,
     EightDirectionBehavior,
     KeyboardPlugin,
+    MousePlugin,
+    PinBehavior,
     PlatformBehavior,
     SpriteObject,
     SystemPlugin,

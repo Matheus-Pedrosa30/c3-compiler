@@ -1,6 +1,6 @@
 import vm from "node:vm";
 import type { IrFactory } from "../ir/irFactory.js";
-import type { GroupNode, IncludeNode, CommentNode, BlockNode, SheetIr } from "../ir/irTypes.js";
+import type { GroupNode, IncludeNode, CommentNode, BlockNode, FunctionBlockNode, SheetIr } from "../ir/irTypes.js";
 
 export interface DslSandboxGlobals {
   readonly sheet: (sheetName: unknown, children: readonly unknown[]) => SheetIr;
@@ -8,6 +8,7 @@ export interface DslSandboxGlobals {
   readonly block: (titleOrOptions?: unknown, maybeOptions?: unknown) => BlockNode;
   readonly include: (includeSheet: unknown) => IncludeNode;
   readonly comment: (text: unknown) => CommentNode;
+  readonly functionBlock: (name: unknown) => FunctionBlockNode;
 }
 
 export interface DslSandbox {
@@ -33,6 +34,8 @@ export function createDslSandbox(
     include: (includeSheet: unknown): IncludeNode =>
       irFactory.createInclude(includeSheet),
     comment: (text: unknown): CommentNode => irFactory.createComment(text),
+    functionBlock: (name: unknown): FunctionBlockNode =>
+      irFactory.createFunctionBlock(name),
   });
 
   const context = vm.createContext(

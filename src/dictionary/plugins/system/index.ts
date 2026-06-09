@@ -1,9 +1,11 @@
 import type { PluginDefinition } from "../../../core/dictionary/dictionaryTypes.js";
-import { compareTwoValues, otherwise } from "./systemConditions.js";
+import { compareTwoValues, everyTick, onStartOfLayout, otherwise } from "./systemConditions.js";
 
 export const SystemPlugin = {
   else: otherwise,
   otherwise,
+  everyTick,
+  onStartOfLayout,
   compareTwoValues,
 } as const;
 

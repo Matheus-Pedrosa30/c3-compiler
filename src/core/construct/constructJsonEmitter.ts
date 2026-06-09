@@ -87,6 +87,7 @@ export interface ConstructActionJson {
   id: string;
   objectClass: string;
   sid: ConstructSid;
+  disabled?: true;
   behaviorType?: string;
   parameters?: Record<string, ConstructJsonValue>;
 }
@@ -251,6 +252,10 @@ function emitAction(action: ActionNode): ConstructActionJson {
     objectClass: getObjectClass(action),
     sid: action.sid,
   };
+
+  if (action.disabled === true) {
+    emittedAction.disabled = true;
+  }
 
   applyBehaviorType(emittedAction, action);
   applyParameters(emittedAction, action.params);

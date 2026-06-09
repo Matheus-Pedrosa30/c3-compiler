@@ -8,6 +8,7 @@ import type {
   ConstructProjectSnapshot,
   ConstructValueType,
   EventNode,
+  FunctionBlockNode,
   GroupNode,
   IncludeNode,
   InvocationParam,
@@ -36,6 +37,7 @@ export interface ConditionDraft extends InvocationDraft {
 
 export interface ActionDraft extends InvocationDraft {
   readonly kind: "action";
+  readonly disabled?: boolean;
 }
 
 export interface GroupOptions {
@@ -145,6 +147,18 @@ export class IrFactory {
     };
   }
 
+  createFunctionBlock(name: unknown): FunctionBlockNode {
+    assertNonEmptyString(name, "function block name");
+
+    return {
+      eventType: "function-block",
+      sid: this.#sidAllocator.allocate(),
+      name,
+      parameters: [],
+      children: [],
+    };
+  }
+
   createCondition(draft: ConditionDraft): ConditionNode {
     assertInvocationDraft(draft, "condition");
     const target = this.#resolveInvocationTarget(draft.target);
@@ -171,6 +185,7 @@ export class IrFactory {
       dictionaryId: draft.dictionaryId,
       constructId: draft.constructId,
       params: validateInvocationParams(draft.params ?? [], "action"),
+      ...(draft.disabled === undefined ? {} : { disabled: draft.disabled }),
       ...(target === undefined ? {} : { target }),
       ...(draft.metadata === undefined ? {} : { metadata: draft.metadata }),
     };

@@ -18,10 +18,69 @@ export function setMirrored(isMirrored: boolean) {
   ]);
 }
 
+export function setAnimationFrame(frameNumber: number | string) {
+  return createObjectAction("set-animation-frame", [
+    {
+      name: "frame-number",
+      valueType: typeof frameNumber === "number" ? "number" : "expression",
+      value: frameNumber,
+    },
+  ]);
+}
+
+export function setInstanceVariable(instanceVariable: string, value: string) {
+  return createObjectAction("set-instvar-value", [
+    {
+      name: "instance-variable",
+      valueType: "string",
+      value: instanceVariable,
+    },
+    {
+      name: "value",
+      valueType: "expression",
+      value,
+    },
+  ]);
+}
+
+export function setAnimation(animation: string, from: "beginning" | "current-frame") {
+  return createObjectAction("set-animation", [
+    {
+      name: "animation",
+      valueType: "expression",
+      value: animation,
+    },
+    {
+      name: "from",
+      valueType: "enum",
+      value: from,
+    },
+  ]);
+}
+
+export function setPosition(x: string, y: string) {
+  return createObjectAction("set-position", [
+    {
+      name: "x",
+      valueType: "expression",
+      value: x,
+    },
+    {
+      name: "y",
+      valueType: "expression",
+      value: y,
+    },
+  ]);
+}
+
 export const SpriteObject = {
   id: "Sprite",
   setAnimationSpeed,
   setMirrored,
+  setAnimationFrame,
+  setInstanceVariable,
+  setAnimation,
+  setPosition,
 } as const;
 
 export const spriteObjectDefinition: ObjectTypeDefinition = {
