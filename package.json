@@ -1,0 +1,21 @@
+{
+  "name": "c3-compiler",
+  "version": "1.0.0",
+  "description": "A defensive TypeScript compiler/transpiler for generating Construct 3 event sheet JSON from a composable DSL.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "typescript": "^6.0.3"
+  }
+}
