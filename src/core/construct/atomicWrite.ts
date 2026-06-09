@@ -15,6 +15,7 @@ import path from "node:path";
 export interface AtomicJsonWriteOptions {
   readonly backupExisting?: boolean;
   readonly backupExtension?: string;
+  readonly tempExtension?: string;
 }
 
 export interface AtomicJsonWriteResult {
@@ -37,7 +38,10 @@ export function atomicWriteJsonFile(
 ): AtomicJsonWriteResult {
   const normalizedFilePath = path.resolve(filePath);
   const directory = path.dirname(normalizedFilePath);
-  const tempFilePath = createTempFilePath(normalizedFilePath);
+  const tempFilePath = createTempFilePath(
+    normalizedFilePath,
+    options.tempExtension,
+  );
   const backupFilePath =
     options.backupExisting === true && existsSync(normalizedFilePath)
       ? `${normalizedFilePath}${options.backupExtension ?? ".bak"}`
@@ -72,9 +76,9 @@ export function atomicWriteJsonFile(
   }
 }
 
-function createTempFilePath(filePath: string): string {
+function createTempFilePath(filePath: string, tempExtension?: string): string {
   const parsed = path.parse(filePath);
-  return path.join(parsed.dir, `${parsed.name}.tmp.json`);
+  return path.join(parsed.dir, `${parsed.name}${tempExtension ?? ".tmp.json"}`);
 }
 
 function validateWrittenJson(filePath: string): void {

@@ -5,20 +5,11 @@ import path from "node:path";
 import { atomicWriteJsonFile } from "./core/construct/atomicWrite.js";
 import { ConstructJsonEmitter } from "./core/construct/constructJsonEmitter.js";
 import { readConstructProject } from "./core/construct/constructProjectReader.js";
+import { syncEventSheetManifest } from "./core/construct/constructProjectWriter.js";
 import { IrFactory } from "./core/ir/irFactory.js";
 import { DslRuntime } from "./core/runtime/dslRuntime.js";
 import { SidRegistry } from "./core/sid/sidRegistry.js";
-import {
-  EightDirectionBehavior,
-  KeyboardPlugin,
-  MousePlugin,
-  PinBehavior,
-  PlatformBehavior,
-  SpriteObject,
-  SystemPlugin,
-  object,
-  use,
-} from "./dictionary/index.js";
+import { dictionaryRuntimeGlobals } from "./dictionary/index.js";
 
 interface CliArgs {
   readonly input: string;
@@ -54,7 +45,7 @@ async function main(argv: readonly string[]): Promise<void> {
   console.log(`c3-compiler: executing DSL: ${inputPath}`);
   const sheets = runtime.execute(source, {
     filename: inputPath,
-    globals: createDslGlobals(),
+    globals: dictionaryRuntimeGlobals,
   });
 
   if (sheets.length !== 1) {
@@ -70,7 +61,8 @@ async function main(argv: readonly string[]): Promise<void> {
   }
 
   const emitter = new ConstructJsonEmitter(sidRegistry);
-  const jsonText = emitter.serializeEventSheet(sheet);
+  const eventSheetJson = emitter.emitEventSheet(sheet);
+  const jsonText = `${JSON.stringify(eventSheetJson, null, "\t")}\n`;
 
   console.log(`c3-compiler: writing event sheet: ${outputPath}`);
   const writeResult = atomicWriteJsonFile(outputPath, jsonText, {
@@ -79,23 +71,26 @@ async function main(argv: readonly string[]): Promise<void> {
 
   console.log(`c3-compiler: wrote ${writeResult.filePath}`);
 
+  console.log(`c3-compiler: syncing manifest: ${path.join(projectRoot, "project.c3proj")}`);
+  const manifestResult = syncEventSheetManifest({
+    projectRoot,
+    outputPath,
+    sheetName: eventSheetJson.name,
+    sheetSid: eventSheetJson.sid,
+    backupExisting: args.backup,
+  });
+
+  if (manifestResult.changed) {
+    console.log(`c3-compiler: wrote ${manifestResult.manifestPath}`);
+  } else {
+    console.log(
+      `c3-compiler: manifest already contains event sheet "${manifestResult.sheetName}"`,
+    );
+  }
+
   if (writeResult.backupFilePath !== undefined) {
     console.log(`c3-compiler: backup ${writeResult.backupFilePath}`);
   }
-}
-
-function createDslGlobals(): Record<string, unknown> {
-  return {
-    object,
-    use,
-    EightDirectionBehavior,
-    KeyboardPlugin,
-    MousePlugin,
-    PinBehavior,
-    PlatformBehavior,
-    SpriteObject,
-    SystemPlugin,
-  };
 }
 
 function parseArgs(argv: readonly string[]): CliArgs {

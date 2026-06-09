@@ -29,6 +29,18 @@ export {
   use,
 };
 
+export const dictionaryRuntimeGlobals = Object.freeze({
+  object,
+  use,
+  EightDirectionBehavior,
+  KeyboardPlugin,
+  MousePlugin,
+  PinBehavior,
+  PlatformBehavior,
+  SpriteObject,
+  SystemPlugin,
+});
+
 export const constructDictionary: DictionaryModule = {
   name: "construct3-core-capabilities",
   version: "0.1.0",
