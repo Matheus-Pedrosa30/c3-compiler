@@ -13,6 +13,7 @@ import {
 } from "./plugins/keyboard/index.js";
 import { SystemPlugin, systemPluginDefinition } from "./plugins/system/index.js";
 import { SpriteObject, spriteObjectDefinition } from "./objects/spriteObject.js";
+import { object, use } from "./bindings/objectBinding.js";
 
 export {
   EightDirectionBehavior,
@@ -20,6 +21,8 @@ export {
   PlatformBehavior,
   SpriteObject,
   SystemPlugin,
+  object,
+  use,
 };
 
 export const constructDictionary: DictionaryModule = {

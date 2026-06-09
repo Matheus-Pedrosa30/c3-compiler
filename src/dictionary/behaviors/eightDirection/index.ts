@@ -3,6 +3,7 @@ import { simulateControl } from "./eightDirectionActions.js";
 import { isMoving } from "./eightDirectionConditions.js";
 
 export const EightDirectionBehavior = {
+  id: "8Direction",
   isMoving,
   simulateControl,
 } as const;

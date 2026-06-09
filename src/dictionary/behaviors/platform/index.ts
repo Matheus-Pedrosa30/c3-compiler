@@ -3,6 +3,7 @@ import { simulateControl } from "./platformActions.js";
 import { isMoving } from "./platformConditions.js";
 
 export const PlatformBehavior = {
+  id: "Platform",
   isMoving,
   simulateControl,
 } as const;

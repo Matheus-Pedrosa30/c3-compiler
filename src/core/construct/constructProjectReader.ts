@@ -170,6 +170,10 @@ async function collectConstructJsonFiles(
     const entryPath = path.join(directory, entry.name);
 
     if (entry.isDirectory()) {
+      if (entry.name === "uistate") {
+        continue;
+      }
+
       await collectConstructJsonFiles(entryPath, files);
       continue;
     }

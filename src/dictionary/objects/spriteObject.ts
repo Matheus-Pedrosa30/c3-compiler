@@ -8,8 +8,20 @@ export function setAnimationSpeed(speed: number | string) {
   ]);
 }
 
+export function setMirrored(isMirrored: boolean) {
+  return createObjectAction("set-mirrored", [
+    {
+      name: "state",
+      valueType: "enum",
+      value: isMirrored ? "mirrored" : "not-mirrored",
+    },
+  ]);
+}
+
 export const SpriteObject = {
+  id: "Sprite",
   setAnimationSpeed,
+  setMirrored,
 } as const;
 
 export const spriteObjectDefinition: ObjectTypeDefinition = {

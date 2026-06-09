@@ -18,6 +18,7 @@ export interface DslSandbox {
 export function createDslSandbox(
   irFactory: IrFactory,
   onSheet: (sheet: SheetIr) => void,
+  extraGlobals: Record<string, unknown> = {},
 ): DslSandbox {
   const globals: DslSandboxGlobals = Object.freeze({
     sheet: (sheetName: unknown, children: readonly unknown[]): SheetIr => {
@@ -37,6 +38,7 @@ export function createDslSandbox(
   const context = vm.createContext(
     Object.freeze({
       ...globals,
+      ...extraGlobals,
     }),
     {
       name: "c3-dsl-sandbox",

@@ -25,6 +25,10 @@ export class SidRegistry {
     return new SidRegistry(occurrences.map((occurrence) => occurrence.sid));
   }
 
+  static fromSids(sids: Iterable<ConstructSid>): SidRegistry {
+    return new SidRegistry([...sids]);
+  }
+
   static empty(): SidRegistry {
     return new SidRegistry([]);
   }

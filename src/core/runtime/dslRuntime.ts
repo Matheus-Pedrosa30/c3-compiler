@@ -6,6 +6,7 @@ import { createDslSandbox } from "./dslSandbox.js";
 export interface DslRuntimeOptions {
   readonly filename?: string;
   readonly timeoutMs?: number;
+  readonly globals?: Record<string, unknown>;
 }
 
 export class DslRuntimeError extends Error {
@@ -28,7 +29,7 @@ export class DslRuntime {
     const sheets: SheetIr[] = [];
     const sandbox = createDslSandbox(this.#irFactory, (sheet) => {
       sheets.push(sheet);
-    });
+    }, options.globals);
     const script = new vm.Script(source, {
       filename: options.filename ?? "anonymous.c3dsl.js",
     });

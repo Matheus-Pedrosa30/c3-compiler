@@ -4,6 +4,9 @@
   "description": "A defensive TypeScript compiler/transpiler for generating Construct 3 event sheet JSON from a composable DSL.",
   "type": "module",
   "main": "./dist/index.js",
+  "bin": {
+    "c3-compiler": "./dist/index.js"
+  },
   "exports": {
     ".": "./dist/index.js"
   },
