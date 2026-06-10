@@ -190,8 +190,8 @@ Siga os passos abaixo para clonar o repositório, instalar as dependências e pr
 Abra o seu terminal (ex: Kitty) e execute o comando abaixo para trazer o projeto para a sua máquina local:
 
 ```bash
-git clone https://github.com/Matheus-Pedrosa30/c3-transpiler.git
-cd c3-transpiler
+git clone https://github.com/Matheus-Pedrosa30/c3-compiler.git
+cd c3-compiler
 ```
 
 ### 2. Instalar Dependências
