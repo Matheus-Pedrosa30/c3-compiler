@@ -229,6 +229,28 @@ SystemPlugin.createObject(arrow, "\"Player\"", "player.X", "player.Y");
 
 Se você não souber o índice da layer, peça o JSON do layout ou peça para o usuário confirmar antes de gerar a DSL.
 
+#### BulletBehavior
+
+Números digitáveis do behavior Bullet são persistidos pelo Construct como strings de expressão.
+
+Use:
+
+```ts
+arrow.execute(BulletBehavior.setSpeed(400));
+arrow.execute(BulletBehavior.setAngleOfMotion(45));
+arrow.execute(BulletBehavior.setAngleOfMotion("angle(player.X, player.Y, Mouse.X, Mouse.Y)"));
+```
+
+O JSON esperado é:
+
+```json
+"speed": "400"
+"angle": "45"
+"angle": "angle(player.X, player.Y, Mouse.X, Mouse.Y)"
+```
+
+É PROIBIDO escrever JSON manual com `"speed": 400` ou `"angle": 45`.
+
 ### Factories Globais De Estrutura
 
 Use somente estas factories para montar a árvore da Event Sheet:

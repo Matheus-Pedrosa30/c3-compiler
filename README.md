@@ -364,6 +364,43 @@ SystemPlugin.createObject(arrow, "2", "player.X", "player.Y");
 
 O parâmetro `layer` é o índice numérico da layer persistido como string. Passar nomes como `"Player"` ou literais como `"\"Player\""` é rejeitado com erro explícito antes da escrita.
 
+Para o behavior Bullet, números digitáveis também são persistidos como expressões string:
+
+```ts
+arrow.execute(BulletBehavior.setSpeed(400));
+arrow.execute(BulletBehavior.setAngleOfMotion(45));
+```
+
+É emitido como:
+
+```json
+{
+	"id": "set-speed",
+	"objectClass": "arrow",
+	"behaviorType": "Bullet",
+	"parameters": {
+		"speed": "400"
+	}
+}
+```
+
+```json
+{
+	"id": "set-angle-of-motion",
+	"objectClass": "arrow",
+	"behaviorType": "Bullet",
+	"parameters": {
+		"angle": "45"
+	}
+}
+```
+
+Expressões também permanecem strings:
+
+```ts
+arrow.execute(BulletBehavior.setAngleOfMotion("angle(player.X, player.Y, Mouse.X, Mouse.Y)"));
+```
+
 ## Recursos Avançados Implementados
 
 ### Injeção Dinâmica De Globais Do Dicionário

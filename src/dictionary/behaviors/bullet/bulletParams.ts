@@ -1,5 +1,12 @@
 import type { InvocationParam } from "../../../core/ir/irTypes.js";
 
+export class BulletParamError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "BulletParamError";
+  }
+}
+
 export type BulletComparison =
   | "equal"
   | "not-equal"
@@ -9,18 +16,22 @@ export type BulletComparison =
   | "greater-or-equal";
 
 export function numberParam(name: string, value: number): InvocationParam {
+  assertFiniteNumber(value, `Bullet ${name}`);
+
   return {
     name,
-    valueType: "number",
-    value,
+    valueType: "expression",
+    value: String(value),
   };
 }
 
 export function numberExpressionParam(name: string, value: number | string): InvocationParam {
+  assertFiniteNumberOrExpression(value, `Bullet ${name}`);
+
   return {
     name,
-    valueType: typeof value === "number" ? "number" : "expression",
-    value,
+    valueType: "expression",
+    value: typeof value === "number" ? String(value) : value,
   };
 }
 
@@ -46,4 +57,26 @@ export function comparisonParam(comparison: BulletComparison): InvocationParam {
     valueType: "enum",
     value: comparison,
   };
+}
+
+function assertFiniteNumber(value: number, label: string): void {
+  if (!Number.isFinite(value)) {
+    throw new BulletParamError(`${label} must be a finite number.`);
+  }
+}
+
+function assertFiniteNumberOrExpression(
+  value: number | string,
+  label: string,
+): void {
+  if (typeof value === "number") {
+    assertFiniteNumber(value, label);
+    return;
+  }
+
+  if (typeof value !== "string" || value.length === 0) {
+    throw new BulletParamError(
+      `${label} must be a finite number or a non-empty Construct expression string.`,
+    );
+  }
 }
