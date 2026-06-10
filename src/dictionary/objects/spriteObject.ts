@@ -43,6 +43,34 @@ export function setInstanceVariable(instanceVariable: string, value: string) {
   ]);
 }
 
+export function setBooleanInstanceVariable(
+  instanceVariable: string,
+  value: boolean,
+) {
+  return createObjectAction("set-boolean-instvar", [
+    {
+      name: "instance-variable",
+      valueType: "string",
+      value: instanceVariable,
+    },
+    {
+      name: "value",
+      valueType: "enum",
+      value: value ? "true" : "false",
+    },
+  ]);
+}
+
+export function isBooleanInstanceVariableSet(instanceVariable: string) {
+  return createObjectCondition("is-boolean-instance-variable-set", [
+    {
+      name: "instance-variable",
+      valueType: "string",
+      value: instanceVariable,
+    },
+  ]);
+}
+
 export function setAnimation(animation: string, from: "beginning" | "current-frame") {
   return createObjectAction("set-animation", [
     {
@@ -89,6 +117,8 @@ export const SpriteObject = {
   setMirrored,
   setAnimationFrame,
   setInstanceVariable,
+  setBooleanInstanceVariable,
+  isBooleanInstanceVariableSet,
   setAnimation,
   setPosition,
   onAnimationFinished,
