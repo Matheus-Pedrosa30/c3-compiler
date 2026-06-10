@@ -78,6 +78,59 @@ Ela apenas referencia objetos que já existem no projeto visual.
 
 Você DEVE assumir que objetos como `player`, `camera`, `mira`, `viewportRegions`, `Keyboard` e `Mouse` só são válidos se existirem no projeto base.
 
+### A LLM SÓ GERA EVENT SHEETS
+
+Você NÃO é responsável por criar o projeto visual.
+
+Você NÃO deve tentar criar, alterar ou inferir automaticamente:
+
+```txt
+objectTypes/
+layouts/
+images/
+icons/
+tilemaps/
+animations
+instance variables
+behaviors anexados a objetos
+layers
+families
+timelines
+project.c3proj
+*.uistate.json
+```
+
+O usuário DEVE criar esses elementos manualmente na IDE visual do Construct 3.
+
+Seu escopo como LLM é estritamente:
+
+```txt
+ler o catálogo existente do projeto
+gerar DSL declarativa .c3dsl.ts
+compilar Event Sheets
+escrever somente a Event Sheet de saída solicitada
+deixar o compilador sincronizar o manifesto automaticamente
+```
+
+Se a lógica que você precisa gerar depende de algo que não existe, PARE e peça ao usuário para criar isso no Construct.
+
+Exemplos de dependências que o usuário deve criar na IDE visual:
+
+```txt
+Sprite arrow
+behavior Bullet anexado ao arrow
+instance variable player.isShooting
+animações rightArrow, leftArrow, upArrow, downArrow
+layer Player
+objeto mira
+plugin Mouse
+plugin Keyboard
+```
+
+Depois que o usuário criar e salvar o projeto como pasta, você pode referenciar esses elementos na DSL.
+
+É PROIBIDO tentar resolver ausência de objeto criando JSON novo em `objectTypes/`.
+
 ### NÃO INVENTE SIDs
 
 É PROIBIDO escrever:
@@ -250,6 +303,35 @@ O JSON esperado é:
 ```
 
 É PROIBIDO escrever JSON manual com `"speed": 400` ou `"angle": 45`.
+
+#### Boolean Instance Variables
+
+Para variáveis booleanas de instância, use as APIs booleanas dedicadas.
+
+Use:
+
+```ts
+player.check(SpriteObject.isBooleanInstanceVariableSet("isShooting"));
+player.execute(SpriteObject.setBooleanInstanceVariable("isShooting", true));
+player.execute(SpriteObject.setBooleanInstanceVariable("isShooting", false));
+```
+
+Para testar `false`, inverta a condição:
+
+```ts
+const notShooting = {
+	...player.check(SpriteObject.isBooleanInstanceVariableSet("isShooting")),
+	isInverted: true,
+};
+```
+
+É PROIBIDO usar:
+
+```ts
+SystemPlugin.compareTwoValues("player.isShooting", "equal", "false");
+player.execute(SpriteObject.setInstanceVariable("isShooting", "true"));
+player.execute(SpriteObject.setInstanceVariable("isShooting", "false"));
+```
 
 ### Factories Globais De Estrutura
 
@@ -633,6 +715,10 @@ sheet("playerController", [
 
 Antes de entregar código DSL, verifique:
 
+- Você gerou somente lógica de Event Sheet.
+- Você NÃO criou nem alterou `objectTypes/`, `layouts/`, assets, animações, behaviors, layers ou instance variables.
+- Toda dependência visual necessária foi criada pelo usuário na IDE do Construct 3.
+- Se algum objeto/behavior/layer/animação/variável necessária não existir, você pediu ao usuário para criar antes de continuar.
 - Todos os objetos foram declarados com `object(...)`.
 - Todos os nomes de objetos estão case-sensitive.
 - Todos os behaviors usados em `.execute` ou `.check` foram declarados com `use(...)`.

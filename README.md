@@ -401,6 +401,29 @@ Expressões também permanecem strings:
 arrow.execute(BulletBehavior.setAngleOfMotion("angle(player.X, player.Y, Mouse.X, Mouse.Y)"));
 ```
 
+Boolean instance variables possuem IDs próprios no Construct. Não use `set-instvar-value` com expressões `"true"` ou `"false"` para booleanos:
+
+```ts
+player.check(SpriteObject.isBooleanInstanceVariableSet("isShooting"));
+player.execute(SpriteObject.setBooleanInstanceVariable("isShooting", true));
+player.execute(SpriteObject.setBooleanInstanceVariable("isShooting", false));
+```
+
+É emitido como:
+
+```json
+{
+	"id": "set-boolean-instvar",
+	"objectClass": "player",
+	"parameters": {
+		"instance-variable": "isShooting",
+		"value": "true"
+	}
+}
+```
+
+Para checar `false`, inverta a condição `is-boolean-instance-variable-set` em vez de comparar com o literal `false`.
+
 ## Recursos Avançados Implementados
 
 ### Injeção Dinâmica De Globais Do Dicionário

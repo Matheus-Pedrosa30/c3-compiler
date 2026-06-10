@@ -17,7 +17,10 @@ const ARROW_SPEED = 400;
 const ARROW_ANGLE = "angle(player.X, player.Y, Mouse.X, Mouse.Y)";
 const AIM_DELTA_X = "abs(Mouse.X - player.X)";
 const AIM_DELTA_Y = "abs(Mouse.Y - player.Y)";
-const NOT_SHOOTING = SystemPlugin.compareTwoValues("player.isShooting", "equal", "false");
+const NOT_SHOOTING = {
+	...player.check(SpriteObject.isBooleanInstanceVariableSet("isShooting")),
+	isInverted: true,
+};
 const NOT_MOVING = {
 	...player.check(EightDirectionBehavior.isMoving()),
 	isInverted: true,
@@ -32,7 +35,7 @@ function disabled(action) {
 
 function shootArrowActions(direction) {
 	return [
-		player.execute(SpriteObject.setInstanceVariable("isShooting", "true")),
+		player.execute(SpriteObject.setBooleanInstanceVariable("isShooting", true)),
 		player.execute(SpriteObject.setAnimationSpeed("20")),
 		player.execute(SpriteObject.setAnimation(`"${direction}Arrow"`, "beginning")),
 		SystemPlugin.createObject(arrow, ARROW_LAYER, "player.X", "player.Y"),
@@ -44,7 +47,7 @@ function shootArrowActions(direction) {
 function finishShootActions(direction) {
 	return [
 		player.execute(SpriteObject.setInstanceVariable("direction", `"${direction}"`)),
-		player.execute(SpriteObject.setInstanceVariable("isShooting", "false")),
+		player.execute(SpriteObject.setBooleanInstanceVariable("isShooting", false)),
 	];
 }
 
