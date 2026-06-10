@@ -4,6 +4,10 @@ import {
   eightDirectionBehaviorDefinition,
 } from "./behaviors/eightDirection/index.js";
 import {
+  BulletBehavior,
+  bulletBehaviorDefinition,
+} from "./behaviors/bullet/index.js";
+import {
   PlatformBehavior,
   platformBehaviorDefinition,
 } from "./behaviors/platform/index.js";
@@ -18,6 +22,7 @@ import { SpriteObject, spriteObjectDefinition } from "./objects/spriteObject.js"
 import { object, use } from "./bindings/objectBinding.js";
 
 export {
+  BulletBehavior,
   EightDirectionBehavior,
   KeyboardPlugin,
   MousePlugin,
@@ -32,6 +37,7 @@ export {
 export const dictionaryRuntimeGlobals = Object.freeze({
   object,
   use,
+  BulletBehavior,
   EightDirectionBehavior,
   KeyboardPlugin,
   MousePlugin,
@@ -45,6 +51,10 @@ export const constructDictionary: DictionaryModule = {
   name: "construct3-core-capabilities",
   version: "0.1.0",
   objects: [spriteObjectDefinition],
-  behaviors: [platformBehaviorDefinition, eightDirectionBehaviorDefinition],
+  behaviors: [
+    platformBehaviorDefinition,
+    eightDirectionBehaviorDefinition,
+    bulletBehaviorDefinition,
+  ],
   plugins: [systemPluginDefinition, keyboardPluginDefinition],
 };

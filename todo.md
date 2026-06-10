@@ -433,17 +433,22 @@ Pendencias:
 
 ### Bullet (`src/dictionary/behaviors/bullet/`)
 
-- [ ] Criar modulo.
-- [ ] Implementar actions:
-  - [ ] set-speed
-  - [ ] set-acceleration
-  - [ ] set-angle-of-motion
-  - [ ] bounce-off-object
-  - [ ] set-enabled
-- [ ] Implementar conditions:
-  - [ ] compare-speed
-  - [ ] compare-distance-travelled
-  - [ ] is-enabled
+- [x] Criar modulo.
+- [x] Exportar `BulletBehavior` em `src/dictionary/index.ts`.
+- [x] Injetar `BulletBehavior` em `dictionaryRuntimeGlobals`.
+- [x] Registrar `bulletBehaviorDefinition` em `constructDictionary`.
+- [x] Implementar actions:
+  - [x] `set-speed`
+  - [x] `set-acceleration`
+  - [x] `set-angle-of-motion`
+  - [x] `bounce-off-object`
+  - [x] `set-enabled`
+- [x] Implementar conditions:
+  - [x] `compare-speed`
+  - [x] `compare-distance-travelled`
+  - [x] `is-enabled`
+- [ ] Confirmar IDs e nomes de parametros contra JSON real exportado pelo Construct.
+- [ ] Criar fixture DSL minima usando `BulletBehavior` em um objeto existente.
 
 ### BoundToLayout (`src/dictionary/behaviors/boundToLayout/`)
 
