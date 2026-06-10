@@ -302,6 +302,68 @@ O ganho de DX é direto:
 - O manifesto é sincronizado.
 - Objetos inexistentes falham antes de qualquer escrita.
 
+## Tipagem Forte Contra O Formato Físico Do Construct
+
+O dicionário não modela apenas nomes bonitos da DSL. Ele codifica o formato persistido real que o Construct 3 grava em disco.
+
+Campos de dropdown e campos aparentemente textuais podem ter representação física diferente no JSON. O compilador deve esconder essa aspereza da DSL, mas também deve falhar cedo quando alguém passa um valor ambíguo.
+
+Exemplos já confirmados contra JSON real salvo pelo Construct:
+
+```ts
+SystemPlugin.compareTwoValues("player.isShooting", "equal", "false");
+```
+
+É emitido como:
+
+```json
+{
+	"id": "compare-two-values",
+	"objectClass": "System",
+	"parameters": {
+		"first-value": "player.isShooting",
+		"comparison": 0,
+		"second-value": "false"
+	}
+}
+```
+
+O parâmetro `comparison` não é salvo como `"equal"`; ele é salvo como código numérico:
+
+| DSL | JSON |
+| --- | ---: |
+| `equal` | `0` |
+| `not-equal` | `1` |
+| `less` | `2` |
+| `less-or-equal` | `3` |
+| `greater` | `4` |
+| `greater-or-equal` | `5` |
+
+Outro exemplo:
+
+```ts
+SystemPlugin.createObject(arrow, "2", "player.X", "player.Y");
+```
+
+É emitido como:
+
+```json
+{
+	"id": "create-object",
+	"objectClass": "System",
+	"parameters": {
+		"object-to-create": "arrow",
+		"layer": "2",
+		"x": "player.X",
+		"y": "player.Y",
+		"create-hierarchy": false,
+		"template-name": "\"\""
+	}
+}
+```
+
+O parâmetro `layer` é o índice numérico da layer persistido como string. Passar nomes como `"Player"` ou literais como `"\"Player\""` é rejeitado com erro explícito antes da escrita.
+
 ## Recursos Avançados Implementados
 
 ### Injeção Dinâmica De Globais Do Dicionário

@@ -12,12 +12,16 @@ const camera = object("camera", SpriteObject, [
 ]);
 const viewportRegions = object("viewportRegions", SpriteObject);
 
-const ARROW_LAYER = "\"Player\"";
+const ARROW_LAYER = "2";
 const ARROW_SPEED = 400;
 const ARROW_ANGLE = "angle(player.X, player.Y, Mouse.X, Mouse.Y)";
 const AIM_DELTA_X = "abs(Mouse.X - player.X)";
 const AIM_DELTA_Y = "abs(Mouse.Y - player.Y)";
 const NOT_SHOOTING = SystemPlugin.compareTwoValues("player.isShooting", "equal", "false");
+const NOT_MOVING = {
+	...player.check(EightDirectionBehavior.isMoving()),
+	isInverted: true,
+};
 
 function disabled(action) {
 	return {
@@ -58,8 +62,8 @@ sheet("playerController", [
 			}),
 			block({
 				conditions: [
-					SystemPlugin.else(),
 					NOT_SHOOTING,
+					NOT_MOVING,
 				],
 				actions: [
 					player.execute(SpriteObject.setAnimationSpeed("0")),

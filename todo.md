@@ -52,10 +52,12 @@ Status implementado:
 - [x] `every-tick`
 - [x] `on-start-of-layout`
 - [x] `compare-two-values`
+- [x] Persistencia forte de `compare-two-values.comparison` como codigos numericos `0..5`.
+- [x] `create-object`
+- [x] Persistencia forte de `create-object.layer` como string numerica, ex: `"2"`.
 
 Pendencias imediatas:
 
-- [ ] Confirmar no JSON real os parametros exatos de `compare-two-values`.
 - [ ] Criar aliases ergonomicos sem alterar IDs persistidos: `SystemPlugin.otherwise`, `SystemPlugin.compare`.
 - [ ] Adicionar testes/fixtures para cada condition atual.
 - [ ] Adicionar actions de variaveis globais/locais:
@@ -81,7 +83,7 @@ Pendencias imediatas:
   - [ ] `set-time-scale`
   - [ ] `compare-time`
 - [ ] Adicionar controle de objetos:
-  - [ ] `create-object`
+  - [x] `create-object`
   - [ ] `create-object-by-name`
   - [ ] `pick-all`
   - [ ] `pick-by-comparison`

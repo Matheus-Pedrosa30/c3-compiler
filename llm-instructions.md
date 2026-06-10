@@ -167,6 +167,68 @@ player.sprite.setAnimationSpeed("20");
 
 O objeto não possui APIs aninhadas. O behavior é uma capability separada e reutilizável.
 
+### Tipagem Forte Do JSON Persistido
+
+Você DEVE respeitar os formatos físicos confirmados em JSON real salvo pelo Construct.
+
+O compilador aceita DSL humana, mas o dicionário converte para códigos e formatos internos do Construct. Não invente o formato persistido.
+
+#### SystemPlugin.compareTwoValues
+
+Use labels humanos na DSL:
+
+```ts
+SystemPlugin.compareTwoValues("player.isShooting", "equal", "false");
+SystemPlugin.compareTwoValues("Mouse.X", "greater-or-equal", "player.X");
+```
+
+Você DEVE usar somente estes labels:
+
+```txt
+equal
+not-equal
+less
+less-or-equal
+greater
+greater-or-equal
+```
+
+O JSON persistido usa códigos numéricos:
+
+```txt
+equal            -> 0
+not-equal        -> 1
+less             -> 2
+less-or-equal    -> 3
+greater          -> 4
+greater-or-equal -> 5
+```
+
+É PROIBIDO passar números diretamente na DSL. O dicionário faz a conversão.
+
+#### SystemPlugin.createObject
+
+Use índice numérico de layer, não nome de layer:
+
+```ts
+SystemPlugin.createObject(arrow, "2", "player.X", "player.Y");
+```
+
+O Construct persiste `layer` como string numérica:
+
+```json
+"layer": "2"
+```
+
+É PROIBIDO usar:
+
+```ts
+SystemPlugin.createObject(arrow, "Player", "player.X", "player.Y");
+SystemPlugin.createObject(arrow, "\"Player\"", "player.X", "player.Y");
+```
+
+Se você não souber o índice da layer, peça o JSON do layout ou peça para o usuário confirmar antes de gerar a DSL.
+
 ### Factories Globais De Estrutura
 
 Use somente estas factories para montar a árvore da Event Sheet:
