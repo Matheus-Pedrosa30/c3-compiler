@@ -16,6 +16,14 @@ export function numberParam(name: string, value: number): InvocationParam {
   };
 }
 
+export function numberExpressionParam(name: string, value: number | string): InvocationParam {
+  return {
+    name,
+    valueType: typeof value === "number" ? "number" : "expression",
+    value,
+  };
+}
+
 export function booleanParam(name: string, value: boolean): InvocationParam {
   return {
     name,

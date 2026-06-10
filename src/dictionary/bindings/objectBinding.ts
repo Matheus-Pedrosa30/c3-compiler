@@ -3,6 +3,7 @@ import type {
   BehaviorActionDescriptor,
   BehaviorConditionDescriptor,
   ObjectActionDescriptor,
+  ObjectConditionDescriptor,
 } from "./capabilityDescriptor.js";
 
 export interface ObjectTypeToken {
@@ -18,7 +19,10 @@ export type ExecutableAction =
   | ObjectActionDescriptor
   | BehaviorActionDescriptor;
 
-export type CheckableCondition = ConditionDraft | BehaviorConditionDescriptor;
+export type CheckableCondition =
+  | ConditionDraft
+  | ObjectConditionDescriptor
+  | BehaviorConditionDescriptor;
 
 export interface BoundDslObject {
   readonly name: string;
@@ -80,6 +84,10 @@ function bindCondition(
     return condition;
   }
 
+  if (isObjectConditionDescriptor(condition)) {
+    return condition.bindTo(objectName);
+  }
+
   assertObjectHasBehavior(objectName, behaviors, condition.behaviorId);
   return condition.bindTo(objectName);
 }
@@ -110,6 +118,12 @@ function isBehaviorActionDescriptor(
   value: ExecutableAction,
 ): value is BehaviorActionDescriptor {
   return value.kind === "behavior-action";
+}
+
+function isObjectConditionDescriptor(
+  value: CheckableCondition,
+): value is ObjectConditionDescriptor {
+  return value.kind === "object-condition";
 }
 
 function assertNonEmptyString(value: string, label: string): void {

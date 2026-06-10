@@ -5,6 +5,7 @@ import type {
   CommentNode,
   ConditionNode,
   ConstructJsonValue,
+  ConstructObjectRef,
   ConstructProjectSnapshot,
   ConstructValueType,
   EventNode,
@@ -266,14 +267,50 @@ export class IrFactory {
       throw new IrFactoryError(formatMissingObjectMessage(target.objectName, this.#projectSnapshot));
     }
 
+    const behaviorId =
+      target.behaviorId === undefined
+        ? undefined
+        : resolveBehaviorType(objectRef, target.behaviorId);
+
     return {
       objectName: objectRef.name,
       objectSid: objectRef.sid,
-      ...(target.behaviorId === undefined
+      ...(behaviorId === undefined
         ? {}
-        : { behaviorId: target.behaviorId }),
+        : { behaviorId }),
     };
   }
+}
+
+function resolveBehaviorType(
+  objectRef: ConstructObjectRef,
+  requestedBehaviorId: string,
+): string {
+  const behavior = objectRef.behaviors.find(
+    (candidate) =>
+      candidate.name === requestedBehaviorId ||
+      candidate.behaviorId === requestedBehaviorId,
+  );
+
+  if (behavior === undefined) {
+    const availableBehaviors = objectRef.behaviors
+      .map((candidate) => `${candidate.name} (${candidate.behaviorId})`)
+      .join(", ");
+    const suffix =
+      availableBehaviors.length === 0
+        ? "The object has no behaviors."
+        : `Available behaviors: ${availableBehaviors}.`;
+
+    throw new IrFactoryError(
+      [
+        `Object "${objectRef.name}" does not have behavior "${requestedBehaviorId}".`,
+        suffix,
+        "Compilation aborted before writing any generated files.",
+      ].join(" "),
+    );
+  }
+
+  return behavior.name;
 }
 
 function normalizeBlockArgs(

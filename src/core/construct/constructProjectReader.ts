@@ -132,7 +132,61 @@ function extractObjectRef(
     name,
     sid,
     objectTypeId: extractObjectTypeId(value),
+    behaviors: extractBehaviorRefs(value, filePath),
   };
+}
+
+function extractBehaviorRefs(
+  value: Record<string, unknown>,
+  filePath: string,
+): readonly ConstructObjectRef["behaviors"][number][] {
+  const behaviorTypes = value.behaviorTypes;
+
+  if (behaviorTypes === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(behaviorTypes)) {
+    throw new ConstructProjectReaderError(
+      `Invalid object type file ${filePath}. Field "behaviorTypes" must be an array.`,
+    );
+  }
+
+  return behaviorTypes.map((behaviorType, index) => {
+    if (!isJsonObject(behaviorType)) {
+      throw new ConstructProjectReaderError(
+        `Invalid behaviorTypes[${index}] in ${filePath}. Expected a JSON object.`,
+      );
+    }
+
+    const behaviorId = behaviorType.behaviorId;
+    const name = behaviorType.name;
+    const sid = behaviorType.sid;
+
+    if (typeof behaviorId !== "string" || behaviorId.length === 0) {
+      throw new ConstructProjectReaderError(
+        `Invalid behaviorTypes[${index}] in ${filePath}. Missing non-empty string field "behaviorId".`,
+      );
+    }
+
+    if (typeof name !== "string" || name.length === 0) {
+      throw new ConstructProjectReaderError(
+        `Invalid behaviorTypes[${index}] in ${filePath}. Missing non-empty string field "name".`,
+      );
+    }
+
+    if (!isValidSid(sid)) {
+      throw new ConstructProjectReaderError(
+        `Invalid behaviorTypes[${index}] in ${filePath}. Missing positive integer field "sid".`,
+      );
+    }
+
+    return {
+      behaviorId,
+      name,
+      sid,
+    };
+  });
 }
 
 function extractObjectTypeId(value: Record<string, unknown>): string {

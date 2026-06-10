@@ -128,6 +128,13 @@ export interface ConstructObjectRef {
   readonly name: string;
   readonly sid: ConstructSid;
   readonly objectTypeId: string;
+  readonly behaviors: readonly ConstructBehaviorRef[];
+}
+
+export interface ConstructBehaviorRef {
+  readonly behaviorId: string;
+  readonly name: string;
+  readonly sid: ConstructSid;
 }
 
 export interface ConstructProjectSnapshot {

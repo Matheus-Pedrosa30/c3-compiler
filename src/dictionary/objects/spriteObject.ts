@@ -1,6 +1,6 @@
 import type { ObjectTypeDefinition } from "../../core/dictionary/dictionaryTypes.js";
 import type { InvocationParam } from "../../core/ir/irTypes.js";
-import { createObjectAction } from "../bindings/capabilityDescriptor.js";
+import { createObjectAction, createObjectCondition } from "../bindings/capabilityDescriptor.js";
 
 export function setAnimationSpeed(speed: number | string) {
   return createObjectAction("set-animation-speed", [
@@ -73,6 +73,16 @@ export function setPosition(x: string, y: string) {
   ]);
 }
 
+export function onAnimationFinished(animation: string) {
+  return createObjectCondition("on-animation-finished", [
+    {
+      name: "animation",
+      valueType: "expression",
+      value: animation,
+    },
+  ]);
+}
+
 export const SpriteObject = {
   id: "Sprite",
   setAnimationSpeed,
@@ -81,6 +91,7 @@ export const SpriteObject = {
   setInstanceVariable,
   setAnimation,
   setPosition,
+  onAnimationFinished,
 } as const;
 
 export const spriteObjectDefinition: ObjectTypeDefinition = {

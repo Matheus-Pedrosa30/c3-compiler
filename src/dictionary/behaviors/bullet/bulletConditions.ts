@@ -5,8 +5,10 @@ import {
   type BulletComparison,
 } from "./bulletParams.js";
 
+const BULLET_BEHAVIOR_ID = "Bullet";
+
 export function compareSpeed(comparison: BulletComparison, speed: number) {
-  return createBehaviorCondition("Bullet", "compare-speed", [
+  return createBehaviorCondition(BULLET_BEHAVIOR_ID, "compare-speed", [
     comparisonParam(comparison),
     numberParam("speed", speed),
   ]);
@@ -16,12 +18,12 @@ export function compareDistanceTravelled(
   comparison: BulletComparison,
   distance: number,
 ) {
-  return createBehaviorCondition("Bullet", "compare-distance-travelled", [
+  return createBehaviorCondition(BULLET_BEHAVIOR_ID, "compare-distance-travelled", [
     comparisonParam(comparison),
     numberParam("distance", distance),
   ]);
 }
 
 export function isEnabled() {
-  return createBehaviorCondition("Bullet", "is-enabled");
+  return createBehaviorCondition(BULLET_BEHAVIOR_ID, "is-enabled");
 }

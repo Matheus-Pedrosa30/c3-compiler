@@ -34,6 +34,13 @@ export interface ObjectActionDescriptor<TConstructId extends string = string> {
   bindTo(target: string | DslTargetRef): ActionDraft;
 }
 
+export interface ObjectConditionDescriptor<TConstructId extends string = string> {
+  readonly kind: "object-condition";
+  readonly constructId: TConstructId;
+  readonly params: readonly InvocationParam[];
+  bindTo(target: string | DslTargetRef): ConditionDraft;
+}
+
 export function createBehaviorCondition<
   const TBehaviorId extends string,
   const TConstructId extends string,
@@ -90,6 +97,24 @@ export function createObjectAction<const TConstructId extends string>(
     params,
     bindTo: (target) => ({
       kind: "action",
+      dictionaryId: "Object",
+      constructId,
+      target: normalizeTarget(target),
+      params,
+    }),
+  };
+}
+
+export function createObjectCondition<const TConstructId extends string>(
+  constructId: TConstructId,
+  params: readonly InvocationParam[] = [],
+): ObjectConditionDescriptor<TConstructId> {
+  return {
+    kind: "object-condition",
+    constructId,
+    params,
+    bindTo: (target) => ({
+      kind: "condition",
       dictionaryId: "Object",
       constructId,
       target: normalizeTarget(target),

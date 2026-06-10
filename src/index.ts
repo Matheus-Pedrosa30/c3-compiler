@@ -5,7 +5,10 @@ import path from "node:path";
 import { atomicWriteJsonFile } from "./core/construct/atomicWrite.js";
 import { ConstructJsonEmitter } from "./core/construct/constructJsonEmitter.js";
 import { readConstructProject } from "./core/construct/constructProjectReader.js";
-import { syncEventSheetManifest } from "./core/construct/constructProjectWriter.js";
+import {
+  syncEventSheetManifest,
+  syncProjectUiState,
+} from "./core/construct/constructProjectWriter.js";
 import { IrFactory } from "./core/ir/irFactory.js";
 import { DslRuntime } from "./core/runtime/dslRuntime.js";
 import { SidRegistry } from "./core/sid/sidRegistry.js";
@@ -86,6 +89,24 @@ async function main(argv: readonly string[]): Promise<void> {
     console.log(
       `c3-compiler: manifest already contains event sheet "${manifestResult.sheetName}"`,
     );
+  }
+
+  console.log(`c3-compiler: syncing project UI state: ${path.join(projectRoot, "project.uistate.json")}`);
+  const uiStateResult = syncProjectUiState({
+    projectRoot,
+    preferredEventSheet: eventSheetJson.name,
+    backupExisting: args.backup,
+  });
+
+  if (uiStateResult.changed) {
+    console.log(`c3-compiler: wrote ${uiStateResult.uiStatePath}`);
+    if (uiStateResult.removedTabs.length > 0) {
+      console.log(
+        `c3-compiler: removed stale UI tab(s): ${uiStateResult.removedTabs.join(", ")}`,
+      );
+    }
+  } else {
+    console.log("c3-compiler: project UI state already valid");
   }
 
   if (writeResult.backupFilePath !== undefined) {

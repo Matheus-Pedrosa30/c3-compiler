@@ -70,7 +70,7 @@ export const bulletBehaviorDefinition: BehaviorDefinition = {
       kind: "action",
       id: "setAngleOfMotion",
       constructId: "set-angle-of-motion",
-      params: [{ name: "angle", valueType: "number", required: true }],
+      params: [{ name: "angle", valueType: "expression", required: true }],
     },
     {
       kind: "action",
