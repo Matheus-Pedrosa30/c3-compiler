@@ -52,6 +52,7 @@ export interface ConstructBlockJson {
   conditions: readonly ConstructConditionJson[];
   actions: readonly ConstructActionJson[];
   sid: ConstructSid;
+  children?: readonly ConstructEventJson[];
 }
 
 export interface ConstructFunctionBlockJson {
@@ -66,6 +67,7 @@ export interface ConstructFunctionBlockJson {
   conditions: readonly ConstructConditionJson[];
   actions: readonly ConstructActionJson[];
   sid: ConstructSid;
+  children?: readonly ConstructEventJson[];
 }
 
 export interface ConstructFunctionParameterJson {
@@ -197,6 +199,9 @@ function emitBlock(block: BlockNode): ConstructBlockJson {
     conditions: block.conditions.map(emitCondition),
     actions: block.actions.map(emitAction),
     sid: block.sid,
+    ...(block.children.length === 0
+      ? {}
+      : { children: block.children.map((child) => emitNestedEvent(child)) }),
   };
 }
 
@@ -223,10 +228,36 @@ function emitFunctionBlock(
       return emittedParameter;
     }),
     eventType: "function-block",
-    conditions: [],
-    actions: [],
+    conditions: functionBlock.conditions.map(emitCondition),
+    actions: functionBlock.actions.map(emitAction),
     sid: functionBlock.sid,
+    ...(functionBlock.children.length === 0
+      ? {}
+      : { children: functionBlock.children.map((child) => emitNestedEvent(child)) }),
   };
+}
+
+function emitNestedEvent(eventNode: EventNode): ConstructEventJson {
+  switch (eventNode.eventType) {
+    case "include":
+      return emitInclude(eventNode);
+    case "comment":
+      return emitComment(eventNode);
+    case "group":
+      return {
+        eventType: "group",
+        disabled: eventNode.disabled,
+        title: eventNode.title,
+        description: "",
+        isActiveOnStart: eventNode.isActiveOnStart,
+        children: eventNode.children.map((child) => emitNestedEvent(child)),
+        sid: eventNode.sid,
+      };
+    case "block":
+      return emitBlock(eventNode);
+    case "function-block":
+      return emitFunctionBlock(eventNode);
+  }
 }
 
 function emitCondition(condition: ConditionNode): ConstructConditionJson {

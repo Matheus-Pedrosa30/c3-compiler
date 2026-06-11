@@ -1,4 +1,7 @@
-import { createBehaviorCondition } from "../../bindings/capabilityDescriptor.js";
+import {
+  createBehaviorCondition,
+  createObjectCondition,
+} from "../../bindings/capabilityDescriptor.js";
 import {
   comparisonParam,
   numberExpressionParam,
@@ -11,11 +14,9 @@ import {
 const PHYSICS_BEHAVIOR_ID = "Physics";
 
 export function onCollisionWithAnotherObject(objectName: string) {
-  return createBehaviorCondition(
-    PHYSICS_BEHAVIOR_ID,
-    "on-collision-with-another-object",
-    [objectParam("object", objectName)],
-  );
+  return createObjectCondition("on-collision-with-another-object", [
+    objectParam("object", objectName),
+  ]);
 }
 
 export function isSleeping() {

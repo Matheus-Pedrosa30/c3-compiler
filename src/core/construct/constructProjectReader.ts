@@ -11,6 +11,7 @@ import { scanSidsInJson, type SidOccurrence } from "../sid/sidScanner.js";
 
 export interface ConstructProjectReaderOptions {
   readonly objectTypesDirName?: string;
+  readonly allowDuplicateSourceSids?: boolean;
 }
 
 export class ConstructProjectReaderError extends Error {
@@ -22,9 +23,11 @@ export class ConstructProjectReaderError extends Error {
 
 export class ConstructProjectReader {
   readonly #objectTypesDirName: string;
+  readonly #allowDuplicateSourceSids: boolean;
 
   constructor(options: ConstructProjectReaderOptions = {}) {
     this.#objectTypesDirName = options.objectTypesDirName ?? "objectTypes";
+    this.#allowDuplicateSourceSids = options.allowDuplicateSourceSids ?? false;
   }
 
   async read(projectRoot: string): Promise<ConstructProjectSnapshot> {
@@ -39,7 +42,9 @@ export class ConstructProjectReader {
 
     const projectJsonFiles = await findConstructJsonFiles(normalizedProjectRoot);
     const sidOccurrences = await collectSidOccurrences(projectJsonFiles);
-    const sidRegistry = SidRegistry.fromOccurrences(sidOccurrences);
+    const sidRegistry = this.#allowDuplicateSourceSids
+      ? SidRegistry.fromSids(sidOccurrences.map((occurrence) => occurrence.sid))
+      : SidRegistry.fromOccurrences(sidOccurrences);
     const objectsByName = hasObjectTypesDir
       ? await readObjectCatalog(objectTypesDir)
       : new Map<string, ConstructObjectRef>();

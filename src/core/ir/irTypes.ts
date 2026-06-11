@@ -56,12 +56,15 @@ export interface BlockNode extends BaseEventNode {
   readonly eventType: "block";
   readonly conditions: readonly ConditionNode[];
   readonly actions: readonly ActionNode[];
+  readonly children: readonly EventNode[];
 }
 
 export interface FunctionBlockNode extends BaseEventNode {
   readonly eventType: "function-block";
   readonly name: string;
   readonly parameters: readonly FunctionParameterNode[];
+  readonly conditions: readonly ConditionNode[];
+  readonly actions: readonly ActionNode[];
   readonly children: readonly EventNode[];
 }
 

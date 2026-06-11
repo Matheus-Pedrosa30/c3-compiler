@@ -52,7 +52,12 @@ export interface GroupOptions {
 export interface BlockOptions {
   readonly conditions?: readonly unknown[];
   readonly actions?: readonly unknown[];
+  readonly children?: readonly unknown[];
   readonly metadata?: IrMetadata;
+}
+
+export interface FunctionBlockOptions extends BlockOptions {
+  readonly children?: readonly unknown[];
 }
 
 export class IrFactoryError extends Error {
@@ -142,21 +147,35 @@ export class IrFactory {
         label,
       ),
       actions: this.#materializeActions(options.actions ?? [], label),
+      children: this.#materializeEventChildren(options.children ?? [], label),
       ...(options.metadata === undefined
         ? {}
         : { metadata: options.metadata }),
     };
   }
 
-  createFunctionBlock(name: unknown): FunctionBlockNode {
+  createFunctionBlock(name: unknown, options: unknown = {}): FunctionBlockNode {
     assertNonEmptyString(name, "function block name");
+    assertPlainObject(options, `functionBlock "${name}" options`);
+    const functionOptions = options as FunctionBlockOptions;
 
     return {
       eventType: "function-block",
       sid: this.#sidAllocator.allocate(),
       name,
       parameters: [],
-      children: [],
+      conditions: this.#materializeConditions(
+        functionOptions.conditions ?? [],
+        `functionBlock "${name}"`,
+      ),
+      actions: this.#materializeActions(
+        functionOptions.actions ?? [],
+        `functionBlock "${name}"`,
+      ),
+      children: this.#materializeEventChildren(
+        functionOptions.children ?? [],
+        `functionBlock "${name}"`,
+      ),
     };
   }
 

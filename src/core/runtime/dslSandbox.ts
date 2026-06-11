@@ -8,7 +8,7 @@ export interface DslSandboxGlobals {
   readonly block: (titleOrOptions?: unknown, maybeOptions?: unknown) => BlockNode;
   readonly include: (includeSheet: unknown) => IncludeNode;
   readonly comment: (text: unknown) => CommentNode;
-  readonly functionBlock: (name: unknown) => FunctionBlockNode;
+  readonly functionBlock: (name: unknown, options?: unknown) => FunctionBlockNode;
 }
 
 export interface DslSandbox {
@@ -34,8 +34,8 @@ export function createDslSandbox(
     include: (includeSheet: unknown): IncludeNode =>
       irFactory.createInclude(includeSheet),
     comment: (text: unknown): CommentNode => irFactory.createComment(text),
-    functionBlock: (name: unknown): FunctionBlockNode =>
-      irFactory.createFunctionBlock(name),
+    functionBlock: (name: unknown, options?: unknown): FunctionBlockNode =>
+      irFactory.createFunctionBlock(name, options),
   });
 
   const context = vm.createContext(

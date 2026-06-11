@@ -19,6 +19,7 @@ interface CliArgs {
   readonly project: string;
   readonly output: string;
   readonly backup: boolean;
+  readonly allowDuplicateSourceSids: boolean;
 }
 
 class CliError extends Error {
@@ -35,7 +36,9 @@ async function main(argv: readonly string[]): Promise<void> {
   const outputPath = resolveOutputPath(projectRoot, args.output);
 
   console.log(`c3-compiler: reading Construct project: ${projectRoot}`);
-  const projectSnapshot = await readConstructProject(projectRoot);
+  const projectSnapshot = await readConstructProject(projectRoot, {
+    allowDuplicateSourceSids: args.allowDuplicateSourceSids,
+  });
   console.log(
     `c3-compiler: indexed ${projectSnapshot.objectsByName.size} object(s) and ${projectSnapshot.usedSids.size} SID(s)`,
   );
@@ -117,6 +120,7 @@ async function main(argv: readonly string[]): Promise<void> {
 function parseArgs(argv: readonly string[]): CliArgs {
   const values = new Map<string, string>();
   let backup = false;
+  let allowDuplicateSourceSids = false;
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -127,6 +131,11 @@ function parseArgs(argv: readonly string[]): CliArgs {
 
     if (arg === "--backup") {
       backup = true;
+      continue;
+    }
+
+    if (arg === "--allow-duplicate-source-sids") {
+      allowDuplicateSourceSids = true;
       continue;
     }
 
@@ -156,6 +165,7 @@ function parseArgs(argv: readonly string[]): CliArgs {
     project: requireFlag(values, "project", "-p/--project"),
     output: requireFlag(values, "output", "-o/--output"),
     backup,
+    allowDuplicateSourceSids,
   };
 }
 
