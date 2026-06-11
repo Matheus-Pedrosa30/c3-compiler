@@ -11,6 +11,10 @@ import {
   PlatformBehavior,
   platformBehaviorDefinition,
 } from "./behaviors/platform/index.js";
+import {
+  PhysicsBehavior,
+  physicsBehaviorDefinition,
+} from "./behaviors/physics/index.js";
 import { PinBehavior } from "./behaviors/pin/index.js";
 import {
   KeyboardPlugin,
@@ -28,6 +32,7 @@ export {
   MousePlugin,
   PinBehavior,
   PlatformBehavior,
+  PhysicsBehavior,
   SpriteObject,
   SystemPlugin,
   object,
@@ -43,6 +48,7 @@ export const dictionaryRuntimeGlobals = Object.freeze({
   MousePlugin,
   PinBehavior,
   PlatformBehavior,
+  PhysicsBehavior,
   SpriteObject,
   SystemPlugin,
 });
@@ -55,6 +61,7 @@ export const constructDictionary: DictionaryModule = {
     platformBehaviorDefinition,
     eightDirectionBehaviorDefinition,
     bulletBehaviorDefinition,
+    physicsBehaviorDefinition,
   ],
   plugins: [systemPluginDefinition, keyboardPluginDefinition],
 };

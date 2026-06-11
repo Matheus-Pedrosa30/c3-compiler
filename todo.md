@@ -327,7 +327,7 @@ Use esta tabela como backlog de modulos em `src/dictionary/behaviors/`.
 | --- | --- | --- | --- |
 | Platform | `Platform` | Gravidade lateral, pulo, corrida e plataformas | [x] Parcial |
 | 8 Direction | `8Direction` | Movimento top-down em 8 eixos | [x] Parcial |
-| Bullet | `Bullet` | Movimento reto de projetil | [ ] Nao iniciado |
+| Bullet | `Bullet` | Movimento reto de projetil | [x] Parcial |
 | Car | `Car` | Fisica de veiculo | [ ] Nao iniciado |
 | Pathfinding | `Pathfinding` | Rota e desvio de obstaculos | [ ] Nao iniciado |
 | Custom Movement | `CustomMovement` | Vetores manuais de velocidade/aceleracao | [ ] Nao iniciado |
@@ -360,7 +360,7 @@ Use esta tabela como backlog de modulos em `src/dictionary/behaviors/`.
 
 | Nome na IDE | ID estrito | Descricao | Status |
 | --- | --- | --- | --- |
-| Physics | `Physics` | Fisica 2D rigida | [ ] Nao iniciado |
+| Physics | `Physics` | Fisica 2D rigida | [x] Parcial |
 | Persist | `Persist` | Persiste estado entre layouts | [ ] Nao iniciado |
 | Destroy Outside Layout | `DestroyOutsideLayout` | Destroi fora do layout | [ ] Nao iniciado |
 | Timer | `Timer` | Timers locais por instancia | [ ] Nao iniciado |
@@ -451,6 +451,71 @@ Pendencias:
   - [x] `is-enabled`
 - [ ] Confirmar IDs e nomes de parametros contra JSON real exportado pelo Construct.
 - [ ] Criar fixture DSL minima usando `BulletBehavior` em um objeto existente.
+
+### Physics (`src/dictionary/behaviors/physics/`)
+
+Fonte fisica validada:
+
+- [x] Gabarito lido em `/home/matheusp/Projetos/construct3-vazio/eventSheets/Event sheet 1.json`.
+- [x] Objeto do gabarito: `physicsObject`.
+- [x] Behavior real no `objectTypes/physicsObject.json`: `behaviorId: "Physics"`, `name: "Physics"`.
+- [x] Comparadores do Physics confirmados como enum numerico no JSON (`comparison: 0..5`), nao string.
+
+Status implementado:
+
+- [x] Criar modulo `src/dictionary/behaviors/physics/`.
+- [x] Exportar `PhysicsBehavior` em `src/dictionary/index.ts`.
+- [x] Injetar `PhysicsBehavior` em `dictionaryRuntimeGlobals`.
+- [x] Registrar `physicsBehaviorDefinition` em `constructDictionary`.
+- [x] Criar `physicsParams.ts` com validadores de expressao numerica, objeto, enum e comparacao.
+- [x] Criar `physicsActions.ts`.
+- [x] Criar `physicsConditions.ts`.
+
+Actions implementadas a partir do JSON real:
+
+- [x] `PhysicsBehavior.setEnabled(true | false)` -> `set-enabled`, parametro `mode: "enabled" | "disabled"`.
+- [x] `PhysicsBehavior.setImmovable(true | false)` -> `set-immovable`, parametro `setting: "immovable" | "movable"`.
+- [x] `PhysicsBehavior.setWorldGravity(gravity)` -> `set-world-gravity`, parametro `gravity`.
+- [x] `PhysicsBehavior.setDensity(density)` -> `set-density`, parametro `density`.
+- [x] `PhysicsBehavior.setFriction(friction)` -> `set-friction`, parametro `friction`.
+- [x] `PhysicsBehavior.setElasticity(elasticity)` -> `set-elasticity`, parametro `elasticity`.
+- [x] `PhysicsBehavior.applyImpulseAtAngle(impulse, angle, imagePoint = 0)` -> `apply-impulse-at-angle`.
+- [x] `PhysicsBehavior.applyForceAtAngle(force, angle, imagePoint = 0)` -> `apply-force-at-angle`.
+- [x] `PhysicsBehavior.applyForce(forceX, forceY, imagePoint = 0)` -> `apply-force`.
+- [x] `PhysicsBehavior.setVelocity(xComponent, yComponent)` -> `set-velocity`.
+- [x] `PhysicsBehavior.setAngularVelocity(angularVelocity)` -> `set-angular-velocity`.
+- [x] `PhysicsBehavior.setAngularDamping(angularDamping)` -> `set-angular-damping`.
+- [x] `PhysicsBehavior.teleport(x, y)` -> `teleport`.
+
+Conditions implementadas a partir do JSON real:
+
+- [x] `PhysicsBehavior.onCollisionWithAnotherObject(objectName)` -> `on-collision-with-another-object`.
+- [x] `PhysicsBehavior.isSleeping()` -> `is-sleeping`.
+- [x] `PhysicsBehavior.isEnabled()` -> `is-enabled`.
+- [x] `PhysicsBehavior.compareMass(comparison, value)` -> `compare-mass`.
+- [x] `PhysicsBehavior.compareVelocity(which, comparison, value)` -> `compare-velocity`.
+- [x] `PhysicsBehavior.compareAngularVelocity(comparison, value)` -> `compare-angular-velocity`.
+
+Tipos ergonomicos implementados:
+
+- [x] `PhysicsComparison`: aceita `equal`, `not-equal`, `less`, `less-or-equal`, `greater`, `greater-or-equal` ou codigo bruto `0..5`; emite sempre numero.
+- [x] `PhysicsVelocityComponent`: `x-velocity`, `y-velocity`, `overall-velocity`.
+- [x] Parametros numericos aceitam `number` ou expressao Construct em `string`, emitindo string como no gabarito fisico.
+
+Pendencias dependentes de novo exemplar fisico:
+
+- [ ] Confirmar actions adicionais do Physics nao presentes no gabarito:
+  - [ ] torque
+  - [ ] impulse/force at position
+  - [ ] damping linear
+  - [ ] prevent rotation / enable collisions, se existirem como actions.
+- [ ] Confirmar conditions adicionais nao presentes no gabarito:
+  - [ ] compare-density
+  - [ ] compare-friction
+  - [ ] compare-elasticity
+  - [ ] on-awake / on-sleep, se existirem.
+- [ ] Criar fixture DSL minima usando `PhysicsBehavior` em objeto real com behavior `Physics`.
+- [ ] Compilar uma folha de prova e abrir no Construct para validar round-trip completo.
 
 ### BoundToLayout (`src/dictionary/behaviors/boundToLayout/`)
 
